@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using OpenCvSharp;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DocumentScanner_OpenCVSharp
@@ -23,66 +24,96 @@ namespace DocumentScanner_OpenCVSharp
 
             //load the image and compute the ratio of the old height
             //to the new height, clone it, and resize it
-            Mat image = new Mat(options.Image);
-            Mat orig = image.Clone();
-            double ratio = image.Height / 500.0;
-            image = Resize(image, 500);
-
-            Mat gray = image.CvtColor(ColorConversionCodes.BGR2GRAY);
-
-            gray = gray.GaussianBlur(new Size(5, 5), 0);
-            Mat edged = gray.Canny(75, 200);
-            Console.WriteLine("STEP 1: Edge Detection");
-            Cv2.ImShow("Image", image);
-            Cv2.ImShow("Edged", edged);
-            Cv2.WaitKey();
-            Cv2.DestroyAllWindows();
-
-            //find the contours in the edged image, keeping only the
-            //largest ones, and initialize the screen contour
-            Mat[] cnts;
-            edged.Clone().FindContours(out cnts, new Mat(), RetrievalModes.List, ContourApproximationModes.ApproxSimple);
-
-            Mat screenCnt = null;
-            //loop over the contours
-            foreach (Mat c in cnts.OrderByDescending(c => c.ContourArea()).Take(5))
+            using (var disposer = new Disposer())
             {
-                //approximate the contour
-                double peri = c.ArcLength(true);
-                Mat approx = c.ApproxPolyDP(0.02 * peri, true);
-                //if our approximated contour has four points, then we
-                //can assume that we have found our screen
-                if (approx.Rows == 4)
+                Mat image = new Mat(options.Image);
+                disposer.Add(image);
+                Mat orig = image.Clone();
+                disposer.Add(orig);
+                double ratio = image.Height / 500.0;
+                image = Resize(image, 500);
+                disposer.Add(image);
+
+                Mat gray = image.CvtColor(ColorConversionCodes.BGR2GRAY);
+                disposer.Add(gray);
+
+                gray = gray.GaussianBlur(new Size(5, 5), 0);
+                disposer.Add(gray);
+
+                Mat edged = gray.Canny(75, 200);
+                disposer.Add(edged);
+
+                Console.WriteLine("STEP 1: Edge Detection");
+                Cv2.ImShow("Image", image);
+                Cv2.ImShow("Edged", edged);
+                Cv2.WaitKey();
+                Cv2.DestroyAllWindows();
+
+                //find the contours in the edged image, keeping only the
+                //largest ones, and initialize the screen contour
+                Mat[] cnts;
+                using (Mat edgedClone = edged.Clone())
                 {
-                    screenCnt = approx;
-                    break;
+                    edgedClone.FindContours(out cnts, new Mat(), RetrievalModes.List, ContourApproximationModes.ApproxSimple);
                 }
+                disposer.Add(cnts);
+
+                Mat screenCnt = null;
+                //loop over the contours
+                foreach (Mat c in cnts.OrderByDescending(c => c.ContourArea()).Take(5))
+                {
+                    //approximate the contour
+                    double peri = c.ArcLength(true);
+                    using (Mat approx = c.ApproxPolyDP(0.02 * peri, true))
+                    {
+                        //if our approximated contour has four points, then we
+                        //can assume that we have found our screen
+                        if (approx.Rows == 4)
+                        {
+                            screenCnt = approx.Clone();
+                            break;
+                        }
+                    }
+                }
+                if (screenCnt == null)
+                {
+                    Console.WriteLine("Failed to find polygon with four points");
+                    return;
+                }
+                disposer.Add(screenCnt);
+
+                //show the contour (outline) of the piece of paper
+                Console.WriteLine("STEP 2: Find contours of paper");
+                Cv2.DrawContours(image, new[] { screenCnt }, -1, Scalar.FromRgb(0, 255, 0), 2);
+                Cv2.ImShow("Outline", image);
+                Cv2.WaitKey();
+                Cv2.DestroyAllWindows();
+
+                //apply the four point transform to obtain a top-down
+                //view of the original image
+                Mat warped = FourPointTransform(orig, screenCnt * ratio);
+                disposer.Add(warped);
+
+                //convert the warped image to grayscale, then threshold it
+                //to give it that 'black and white' paper effect
+                warped = warped.CvtColor(ColorConversionCodes.BGR2GRAY);
+                disposer.Add(warped);
+
+                //warped = threshold_adaptive(warped, 251, offset = 10)
+                Cv2.AdaptiveThreshold(warped, warped, 251, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 251, 10);
+                disposer.Add(warped);
+                //Cv2.Threshold(warped, warped, 251, 255, ThresholdTypes.Binary);
+
+                Console.WriteLine("STEP 3: Apply perspective transform");
+                Mat origResized = Resize(orig, 650);
+                disposer.Add(origResized);
+                Cv2.ImShow("Original", origResized);
+                Mat warpedResized = Resize(warped, 650);
+                disposer.Add(warpedResized);
+                Cv2.ImShow("Scanned", warpedResized);
+                Cv2.WaitKey();
+                Cv2.DestroyAllWindows();
             }
-
-            //show the contour (outline) of the piece of paper
-            Console.WriteLine("STEP 2: Find contours of paper");
-            Cv2.DrawContours(image, new[] { screenCnt }, -1, Scalar.FromRgb(0, 255, 0), 2);
-            Cv2.ImShow("Outline", image);
-            Cv2.WaitKey();
-            Cv2.DestroyAllWindows();
-
-            //apply the four point transform to obtain a top-down
-            //view of the original image
-            Mat warped = FourPointTransform(orig, screenCnt * ratio);
-
-            //convert the warped image to grayscale, then threshold it
-            //to give it that 'black and white' paper effect
-            warped = warped.CvtColor(ColorConversionCodes.BGR2GRAY);
-            //warped = threshold_adaptive(warped, 251, offset = 10)
-            Cv2.AdaptiveThreshold(warped, warped, 251, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 251, 10);
-            //Cv2.Threshold(warped, warped, 251, 255, ThresholdTypes.Binary);
-
-            Console.WriteLine("STEP 3: Apply perspective transform");
-            Cv2.ImShow("Original", Resize(orig, 650));
-            Cv2.ImShow("Scanned", Resize(warped, 650));
-            Cv2.WaitKey();
-            Cv2.DestroyAllWindows();
-
         }
 
         private static Mat FourPointTransform(Mat image, Mat pts)
@@ -121,10 +152,11 @@ namespace DocumentScanner_OpenCVSharp
             };
 
             //compute the perspective transform matrix and then apply it
-            Mat m = Cv2.GetPerspectiveTransform(new[] { tl,tr,br,bl }, dst);
-            Mat warped = image.WarpPerspective(m, new Size(maxWidth, maxHeight));
-
-            return warped;
+            using (Mat m = Cv2.GetPerspectiveTransform(new[] { tl, tr, br, bl }, dst))
+            {
+                Mat warped = image.WarpPerspective(m, new Size(maxWidth, maxHeight));
+                return warped;
+            }
         }
 
         /// <summary>
@@ -151,9 +183,9 @@ namespace DocumentScanner_OpenCVSharp
 
             Point2f[] points =
             {
-                new Point2f(p1.X, p1.Y), 
-                new Point2f(p2.X, p2.Y), 
-                new Point2f(p3.X, p3.Y), 
+                new Point2f(p1.X, p1.Y),
+                new Point2f(p2.X, p2.Y),
+                new Point2f(p3.X, p3.Y),
                 new Point2f(p4.X, p4.Y)
             };
 
@@ -188,7 +220,53 @@ namespace DocumentScanner_OpenCVSharp
         public static Mat Resize(Mat mat, double height)
         {
             double ratio = mat.Height / height;
-            return mat.Resize(new Size(mat.Width / ratio, 500.0));
+            return mat.Resize(new Size(mat.Width / ratio, height));
+        }
+    }
+
+    public class Disposer : IDisposable
+    {
+        private bool _disposed;
+
+        private readonly HashSet<IDisposable> _disposableItems = new HashSet<IDisposable>();
+
+        public bool Add(IDisposable item)
+        {
+            return _disposableItems.Add(item);
+        }
+
+        public void Add(IEnumerable<IDisposable> items)
+        {
+            if (items == null) throw new ArgumentNullException(nameof(items));
+            foreach (IDisposable item in items)
+            {
+                Add(item);
+            }
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                foreach (IDisposable item in _disposableItems)
+                {
+                    item?.Dispose();
+                }
+                _disposableItems.Clear();
+            }
+            _disposed = true;
+        }
+
+        ~Disposer()
+        {
+            Dispose(false);
+        }
+
+        void IDisposable.Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 
