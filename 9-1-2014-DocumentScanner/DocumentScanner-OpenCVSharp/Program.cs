@@ -20,7 +20,6 @@ namespace DocumentScanner_OpenCVSharp
             {
                 return;
             }
-            //TODO: Disposing
 
             //load the image and compute the ratio of the old height
             //to the new height, clone it, and resize it
@@ -98,11 +97,9 @@ namespace DocumentScanner_OpenCVSharp
                 //to give it that 'black and white' paper effect
                 warped = warped.CvtColor(ColorConversionCodes.BGR2GRAY);
                 disposer.Add(warped);
-
-                //warped = threshold_adaptive(warped, 251, offset = 10)
+                
                 Cv2.AdaptiveThreshold(warped, warped, 251, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 251, 10);
                 disposer.Add(warped);
-                //Cv2.Threshold(warped, warped, 251, 255, ThresholdTypes.Binary);
 
                 Console.WriteLine("STEP 3: Apply perspective transform");
                 Mat origResized = Resize(orig, 650);
@@ -217,7 +214,7 @@ namespace DocumentScanner_OpenCVSharp
             return Tuple.Create(tl, tr, br, bl);
         }
 
-        public static Mat Resize(Mat mat, double height)
+        private static Mat Resize(Mat mat, double height)
         {
             double ratio = mat.Height / height;
             return mat.Resize(new Size(mat.Width / ratio, height));
