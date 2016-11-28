@@ -173,10 +173,10 @@ namespace DocumentScanner_OpenCVSharp
             //TODO: Error handling
 
             //Extract points
-            var p1 = pts.Get<Point>(0);
-            var p2 = pts.Get<Point>(1);
-            var p3 = pts.Get<Point>(2);
-            var p4 = pts.Get<Point>(3);
+            Point p1 = pts.Get<Point>(0);
+            Point p2 = pts.Get<Point>(1);
+            Point p3 = pts.Get<Point>(2);
+            Point p4 = pts.Get<Point>(3);
 
             Point2f[] points =
             {
