@@ -3,6 +3,7 @@ using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommandLine.Text;
 
 namespace DocumentScanner_OpenCVSharp
 {
@@ -18,6 +19,7 @@ namespace DocumentScanner_OpenCVSharp
             var options = new Options();
             if (!Parser.Default.ParseArguments(args, options))
             {
+                Console.WriteLine(HelpText.AutoBuild(options));
                 return;
             }
 

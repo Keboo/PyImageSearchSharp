@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using CommandLine.Text;
 
 namespace DocumentScanner_EmguCV
 {
@@ -21,6 +22,7 @@ namespace DocumentScanner_EmguCV
             var options = new Options();
             if (!Parser.Default.ParseArguments(args, options))
             {
+                Console.WriteLine(HelpText.AutoBuild(options));
                 return;
             }
 
