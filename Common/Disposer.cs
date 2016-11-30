@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PyImageSearchSharp
 {
-        public class Disposer : IDisposable
+    public class Disposer : IDisposable
     {
         private bool _disposed;
 
