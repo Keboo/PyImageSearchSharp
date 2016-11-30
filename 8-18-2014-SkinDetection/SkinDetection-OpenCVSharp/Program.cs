@@ -97,10 +97,6 @@ namespace SkinDetection_OpenCVSharp
 
         private static Mat Resize(Mat mat, double width)
         {
-            if (mat.Width == 0 || mat.Height == 0)
-            {
-                return mat.Clone();
-            }
             double ratio = mat.Width / width;
             return mat.Resize(new Size(width, mat.Height / ratio));
         }
