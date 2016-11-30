@@ -62,32 +62,34 @@ namespace SkinDetection_EmguCV
                         //resize the frame, convert it to the HSV color space,
                         //and determine the HSV pixel intensities that fall into
                         //the speicifed upper and lower boundaries
-                        Image<Bgr, byte> resizedFrame = Resize(frame, 400);
-                        Image<Hsv, byte> converted = resizedFrame.Convert<Hsv, byte>();
-                        Image<Gray, byte> skinMask = converted.InRange(lower, upper);
-
-                        //apply a series of erosions and dilations to the mask
-                        //using an elliptical kernel
-                        Mat kernel = CvInvoke.GetStructuringElement(ElementShape.Ellipse, new Size(11, 11), Point.Empty);
-                        CvInvoke.Erode(skinMask, skinMask, kernel, new Point(-1, -1), 2, BorderType.Constant,
-                            CvInvoke.MorphologyDefaultBorderValue);
-                        CvInvoke.Dilate(skinMask, skinMask, kernel, new Point(-1, -1), 2, BorderType.Constant,
-                            CvInvoke.MorphologyDefaultBorderValue);
-
-                        //blur the mask to help remove noise, then apply the
-                        //mask to the frame
-                        skinMask = skinMask.SmoothGaussian(3);
-
-                        Image<Bgr, byte> skin = resizedFrame.And(resizedFrame, skinMask);
-
-                        //show the skin in the image along with the mask
-                        CvInvoke.Imshow("images", resizedFrame);
-                        CvInvoke.Imshow("mask", skin);
-
-                        //if the 'q' key is pressed, stop the loop
-                        if ((CvInvoke.WaitKey(1) & 0xff) == 'q')
+                        using (Image<Bgr, byte> resizedFrame = Resize(frame, 400))
+                        using (Image<Hsv, byte> converted = resizedFrame.Convert<Hsv, byte>())
+                        using (Image<Gray, byte> skinMask = converted.InRange(lower, upper))
                         {
-                            break;
+                            //apply a series of erosions and dilations to the mask
+                            //using an elliptical kernel
+                            using (Mat kernel = CvInvoke.GetStructuringElement(ElementShape.Ellipse, new Size(11, 11), Point.Empty))
+                            {
+                                CvInvoke.Erode(skinMask, skinMask, kernel, new Point(-1, -1), 2, BorderType.Constant,
+                                    CvInvoke.MorphologyDefaultBorderValue);
+                                CvInvoke.Dilate(skinMask, skinMask, kernel, new Point(-1, -1), 2, BorderType.Constant,
+                                    CvInvoke.MorphologyDefaultBorderValue);
+                            }
+                            //blur the mask to help remove noise, then apply the
+                            //mask to the frame
+                            CvInvoke.GaussianBlur(skinMask, skinMask, new Size(3, 3), 0);
+
+                            Image<Bgr, byte> skin = resizedFrame.And(resizedFrame, skinMask);
+
+                            //show the skin in the image along with the mask
+                            CvInvoke.Imshow("images", resizedFrame);
+                            CvInvoke.Imshow("mask", skin);
+
+                            //if the 'q' key is pressed, stop the loop
+                            if ((CvInvoke.WaitKey(1) & 0xff) == 'q')
+                            {
+                                break;
+                            }
                         }
                     }
                 }

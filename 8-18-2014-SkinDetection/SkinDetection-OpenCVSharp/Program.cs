@@ -3,6 +3,7 @@ using OpenCvSharp;
 using System;
 using System.IO;
 using CommandLine.Text;
+using PyImageSearchSharp;
 
 namespace SkinDetection_OpenCVSharp
 {
@@ -46,6 +47,7 @@ namespace SkinDetection_OpenCVSharp
                 {
                     //grab the current frame
                     using (var frame = new Mat())
+                    using (var disposer = new Disposer())
                     {
                         bool grabbed = camera.Read(frame);
                         //if we are viewing a video and we did not grab a
@@ -63,20 +65,29 @@ namespace SkinDetection_OpenCVSharp
                         //and determine the HSV pixel intensities that fall into
                         //the speicifed upper and lower boundaries
                         Mat resizedFrame = Resize(frame, 400);
+                        disposer.Add(resizedFrame);
                         Mat converted = resizedFrame.CvtColor(ColorConversionCodes.BGR2HSV);
+                        disposer.Add(converted);
                         Mat skinMask = new Mat();
+                        disposer.Add(skinMask);
                         Cv2.InRange(converted, lower, upper, skinMask);
 
                         //apply a series of erosions and dilations to the mask
                         //using an elliptical kernel
-                        Mat kernel = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size(11, 11));
-                        skinMask = skinMask.Erode(kernel, iterations: 2);
-                        skinMask = skinMask.Dilate(kernel, iterations: 2);
+                        using (Mat kernel = Cv2.GetStructuringElement(MorphShapes.Ellipse, new Size(11, 11)))
+                        {
+                            skinMask = skinMask.Erode(kernel, iterations: 2);
+                            disposer.Add(skinMask);
+                            skinMask = skinMask.Dilate(kernel, iterations: 2);
+                            disposer.Add(skinMask);
+                        }
 
                         //blur the mask to help remove noise, then apply the
                         //mask to the frame
                         skinMask = skinMask.GaussianBlur(new Size(3, 3), 0);
+                        disposer.Add(skinMask);
                         Mat skin = new Mat();
+                        disposer.Add(skin);
                         Cv2.BitwiseAnd(resizedFrame, resizedFrame, skin, skinMask);
 
                         //show the skin in the image along with the mask
