@@ -1,9 +1,9 @@
 ﻿using CommandLine;
-using OpenCvSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using CommandLine.Text;
+using OpenCvSharp;
+using PyImageSearchSharp;
+using System;
+using System.Linq;
 
 namespace DocumentScanner_OpenCVSharp
 {
@@ -32,7 +32,7 @@ namespace DocumentScanner_OpenCVSharp
                 Mat orig = image.Clone();
                 disposer.Add(orig);
                 double ratio = image.Height / 500.0;
-                image = Resize(image, 500);
+                image = ImageUtil.Resize(image, height:500);
                 disposer.Add(image);
 
                 Mat gray = image.CvtColor(ColorConversionCodes.BGR2GRAY);
@@ -104,10 +104,10 @@ namespace DocumentScanner_OpenCVSharp
                 disposer.Add(warped);
 
                 Console.WriteLine("STEP 3: Apply perspective transform");
-                Mat origResized = Resize(orig, 650);
+                Mat origResized = ImageUtil.Resize(orig, height:650);
                 disposer.Add(origResized);
                 Cv2.ImShow("Original", origResized);
-                Mat warpedResized = Resize(warped, 650);
+                Mat warpedResized = ImageUtil.Resize(warped, height:650);
                 disposer.Add(warpedResized);
                 Cv2.ImShow("Scanned", warpedResized);
                 Cv2.WaitKey();
@@ -214,58 +214,6 @@ namespace DocumentScanner_OpenCVSharp
             //return the coordinates in top-left, top-right,
             //bottom-right, and bottom-left order
             return Tuple.Create(tl, tr, br, bl);
-        }
-
-        private static Mat Resize(Mat mat, double height)
-        {
-            double ratio = mat.Height / height;
-            return mat.Resize(new Size(mat.Width / ratio, height));
-        }
-    }
-
-    public class Disposer : IDisposable
-    {
-        private bool _disposed;
-
-        private readonly HashSet<IDisposable> _disposableItems = new HashSet<IDisposable>();
-
-        public bool Add(IDisposable item)
-        {
-            return _disposableItems.Add(item);
-        }
-
-        public void Add(IEnumerable<IDisposable> items)
-        {
-            if (items == null) throw new ArgumentNullException(nameof(items));
-            foreach (IDisposable item in items)
-            {
-                Add(item);
-            }
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (_disposed) return;
-            if (disposing)
-            {
-                foreach (IDisposable item in _disposableItems)
-                {
-                    item?.Dispose();
-                }
-                _disposableItems.Clear();
-            }
-            _disposed = true;
-        }
-
-        ~Disposer()
-        {
-            Dispose(false);
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 

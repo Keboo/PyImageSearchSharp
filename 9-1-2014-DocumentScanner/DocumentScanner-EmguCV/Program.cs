@@ -1,13 +1,14 @@
 ﻿using CommandLine;
+using CommandLine.Text;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 using Emgu.CV.Util;
+using PyImageSearchSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using CommandLine.Text;
 
 namespace DocumentScanner_EmguCV
 {
@@ -35,7 +36,7 @@ namespace DocumentScanner_EmguCV
                 Image<Bgr, byte> orig = image.Clone();
                 disposer.Add(orig);
                 double ratio = image.Height / 500.0;
-                image = Resize(image, 500);
+                image = ImageUtil.Resize(image, height: 500);
                 disposer.Add(image);
 
                 Image<Gray, byte> gray = image.Convert<Gray, byte>();
@@ -108,10 +109,10 @@ namespace DocumentScanner_EmguCV
                 disposer.Add(warpedGray);
 
                 Console.WriteLine("STEP 3: Apply perspective transform");
-                Image<Bgr, byte> origResized = Resize(orig, 650);
+                Image<Bgr, byte> origResized = ImageUtil.Resize(orig, height: 650);
                 disposer.Add(origResized);
                 CvInvoke.Imshow("Original", origResized);
-                Image<Gray, byte> warpedResized = Resize(warpedGray, 650);
+                Image<Gray, byte> warpedResized = ImageUtil.Resize(warpedGray, height: 650);
                 disposer.Add(warpedResized);
                 CvInvoke.Imshow("Scanned", warpedResized);
                 CvInvoke.WaitKey();
@@ -224,62 +225,9 @@ namespace DocumentScanner_EmguCV
             return Tuple.Create(tl, tr, br, bl);
         }
 
-        private static Image<TColor, TDepth> Resize<TColor, TDepth>(Image<TColor, TDepth> mat, double height)
-            where TColor : struct, IColor where TDepth : new()
-        {
-            double ratio = mat.Height / height;
-            return mat.Resize((int)(mat.Width / ratio), (int)height, Inter.Linear);
-        }
-
         private static double Distance(PointF p1, PointF p2)
         {
             return Math.Sqrt(Math.Pow(p2.X - p1.X, 2.0) + Math.Pow(p2.Y - p1.Y, 2.0));
-        }
-    }
-
-    public class Disposer : IDisposable
-    {
-        private bool _disposed;
-
-        private readonly HashSet<IDisposable> _disposableItems = new HashSet<IDisposable>();
-
-        public bool Add(IDisposable item)
-        {
-            return _disposableItems.Add(item);
-        }
-
-        public void Add(IEnumerable<IDisposable> items)
-        {
-            if (items == null) throw new ArgumentNullException(nameof(items));
-            foreach (IDisposable item in items)
-            {
-                Add(item);
-            }
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (_disposed) return;
-            if (disposing)
-            {
-                foreach (IDisposable item in _disposableItems)
-                {
-                    item?.Dispose();
-                }
-                _disposableItems.Clear();
-            }
-            _disposed = true;
-        }
-
-        ~Disposer()
-        {
-            Dispose(false);
-        }
-
-        void IDisposable.Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 

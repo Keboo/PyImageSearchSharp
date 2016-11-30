@@ -6,6 +6,7 @@ using Emgu.CV.Structure;
 using System;
 using System.Drawing;
 using System.IO;
+using PyImageSearchSharp;
 
 namespace SkinDetection_EmguCV
 {
@@ -62,7 +63,7 @@ namespace SkinDetection_EmguCV
                         //resize the frame, convert it to the HSV color space,
                         //and determine the HSV pixel intensities that fall into
                         //the speicifed upper and lower boundaries
-                        using (Image<Bgr, byte> resizedFrame = Resize(frame, 400))
+                        using (Image<Bgr, byte> resizedFrame = ImageUtil.Resize(frame, width:400))
                         using (Image<Hsv, byte> converted = resizedFrame.Convert<Hsv, byte>())
                         using (Image<Gray, byte> skinMask = converted.InRange(lower, upper))
                         {
@@ -96,13 +97,6 @@ namespace SkinDetection_EmguCV
             }
 
             CvInvoke.DestroyAllWindows();
-        }
-
-        private static Image<TColor, TDepth> Resize<TColor, TDepth>(Image<TColor, TDepth> mat, double width)
-            where TColor : struct, IColor where TDepth : new()
-        {
-            double ratio = mat.Width / width;
-            return mat.Resize((int)width, (int)(mat.Height / ratio), Inter.Linear);
         }
     }
 

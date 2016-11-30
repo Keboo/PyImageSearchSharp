@@ -64,7 +64,7 @@ namespace SkinDetection_OpenCVSharp
                         //resize the frame, convert it to the HSV color space,
                         //and determine the HSV pixel intensities that fall into
                         //the speicifed upper and lower boundaries
-                        Mat resizedFrame = Resize(frame, 400);
+                        Mat resizedFrame = ImageUtil.Resize(frame, width:400);
                         disposer.Add(resizedFrame);
                         Mat converted = resizedFrame.CvtColor(ColorConversionCodes.BGR2HSV);
                         disposer.Add(converted);
@@ -104,12 +104,6 @@ namespace SkinDetection_OpenCVSharp
             }
 
             Cv2.DestroyAllWindows();
-        }
-
-        private static Mat Resize(Mat mat, double width)
-        {
-            double ratio = mat.Width / width;
-            return mat.Resize(new Size(width, mat.Height / ratio));
         }
     }
 
