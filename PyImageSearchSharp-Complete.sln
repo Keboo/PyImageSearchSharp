@@ -49,6 +49,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Videos", "Videos", "{4622C5
 		8-18-2014-SkinDetection\video\skin_example.mov = 8-18-2014-SkinDetection\video\skin_example.mov
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{F618C3E1-813C-4AE2-AFF7-597E0E8E9432}"
+	ProjectSection(SolutionItems) = preProject
+		Common\Disposer.cs = Common\Disposer.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenCVSharp", "OpenCVSharp", "{0F779628-31E5-483A-9742-784E39986410}"
+	ProjectSection(SolutionItems) = preProject
+		Common\OpenCVSharp\ImageUtil.cs = Common\OpenCVSharp\ImageUtil.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EmguCV", "EmguCV", "{A2B59D9C-6ECC-4DFA-A733-65DF5AF72E14}"
+	ProjectSection(SolutionItems) = preProject
+		Common\EmguCV\ImageUtil.cs = Common\EmguCV\ImageUtil.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,5 +103,7 @@ Global
 		{196003A2-EA0E-4276-A91A-8C334F589EE0} = {A253D95F-FCF9-4CB2-BCFD-065CE48701BA}
 		{50852044-96AA-4664-936F-D87C8EDC37AC} = {18D41E41-FDBC-49FB-B011-00B59AB257BB}
 		{4622C51F-4180-4F62-A4FA-94F1797DA33E} = {BA1C690A-3C72-4BFE-896B-962EF55AAFDD}
+		{0F779628-31E5-483A-9742-784E39986410} = {F618C3E1-813C-4AE2-AFF7-597E0E8E9432}
+		{A2B59D9C-6ECC-4DFA-A733-65DF5AF72E14} = {F618C3E1-813C-4AE2-AFF7-597E0E8E9432}
 	EndGlobalSection
 EndGlobal
