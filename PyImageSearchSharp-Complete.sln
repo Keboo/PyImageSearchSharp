@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorTransfer-OpenCVSharp", "6-30-2014-ColorTransfer\ColorTransfer-OpenCVSharp\ColorTransfer-OpenCVSharp.csproj", "{2986B2B5-97E6-4F23-9D0C-1287BA2B1C52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ColorTransfer", "ColorTransfer", "{18D41E41-FDBC-49FB-B011-00B59AB257BB}"
+	ProjectSection(SolutionItems) = preProject
+		6-30-2014-ColorTransfer\README.md = 6-30-2014-ColorTransfer\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SkinDetection", "SkinDetection", "{BA1C690A-3C72-4BFE-896B-962EF55AAFDD}"
+	ProjectSection(SolutionItems) = preProject
+		8-18-2014-SkinDetection\README.md = 8-18-2014-SkinDetection\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinDetection-EmguCV", "8-18-2014-SkinDetection\SkinDetection-EmguCV\SkinDetection-EmguCV.csproj", "{AA02A2E3-7FF3-42EA-B621-6407BE957ED0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinDetection-OpenCVSharp", "8-18-2014-SkinDetection\SkinDetection-OpenCVSharp\SkinDetection-OpenCVSharp.csproj", "{CF90AFD4-1B5A-4288-8F50-9999955FC616}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocumentScanner", "DocumentScanner", "{A253D95F-FCF9-4CB2-BCFD-065CE48701BA}"
+	ProjectSection(SolutionItems) = preProject
+		9-1-2014-DocumentScanner\README.md = 9-1-2014-DocumentScanner\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentScanner-EmguCV", "9-1-2014-DocumentScanner\DocumentScanner-EmguCV\DocumentScanner-EmguCV.csproj", "{7C363315-6468-4DAF-AF59-8F181EB73F6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentScanner-OpenCVSharp", "9-1-2014-DocumentScanner\DocumentScanner-OpenCVSharp\DocumentScanner-OpenCVSharp.csproj", "{11F694F7-5F05-4F3D-BDE8-449EC002258E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{196003A2-EA0E-4276-A91A-8C334F589EE0}"
+	ProjectSection(SolutionItems) = preProject
+		9-1-2014-DocumentScanner\images\page.jpg = 9-1-2014-DocumentScanner\images\page.jpg
+		9-1-2014-DocumentScanner\images\receipt.jpg = 9-1-2014-DocumentScanner\images\receipt.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{50852044-96AA-4664-936F-D87C8EDC37AC}"
+	ProjectSection(SolutionItems) = preProject
+		6-30-2014-ColorTransfer\images\autumn.jpg = 6-30-2014-ColorTransfer\images\autumn.jpg
+		6-30-2014-ColorTransfer\images\fallingwater.jpg = 6-30-2014-ColorTransfer\images\fallingwater.jpg
+		6-30-2014-ColorTransfer\images\ocean_day.jpg = 6-30-2014-ColorTransfer\images\ocean_day.jpg
+		6-30-2014-ColorTransfer\images\ocean_sunset.jpg = 6-30-2014-ColorTransfer\images\ocean_sunset.jpg
+		6-30-2014-ColorTransfer\images\storm.jpg = 6-30-2014-ColorTransfer\images\storm.jpg
+		6-30-2014-ColorTransfer\images\woods.jpg = 6-30-2014-ColorTransfer\images\woods.jpg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Videos", "Videos", "{4622C51F-4180-4F62-A4FA-94F1797DA33E}"
+	ProjectSection(SolutionItems) = preProject
+		8-18-2014-SkinDetection\video\skin_example.mov = 8-18-2014-SkinDetection\video\skin_example.mov
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2986B2B5-97E6-4F23-9D0C-1287BA2B1C52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2986B2B5-97E6-4F23-9D0C-1287BA2B1C52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2986B2B5-97E6-4F23-9D0C-1287BA2B1C52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2986B2B5-97E6-4F23-9D0C-1287BA2B1C52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA02A2E3-7FF3-42EA-B621-6407BE957ED0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA02A2E3-7FF3-42EA-B621-6407BE957ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA02A2E3-7FF3-42EA-B621-6407BE957ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA02A2E3-7FF3-42EA-B621-6407BE957ED0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF90AFD4-1B5A-4288-8F50-9999955FC616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF90AFD4-1B5A-4288-8F50-9999955FC616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF90AFD4-1B5A-4288-8F50-9999955FC616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF90AFD4-1B5A-4288-8F50-9999955FC616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C363315-6468-4DAF-AF59-8F181EB73F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C363315-6468-4DAF-AF59-8F181EB73F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C363315-6468-4DAF-AF59-8F181EB73F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C363315-6468-4DAF-AF59-8F181EB73F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F694F7-5F05-4F3D-BDE8-449EC002258E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F694F7-5F05-4F3D-BDE8-449EC002258E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F694F7-5F05-4F3D-BDE8-449EC002258E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F694F7-5F05-4F3D-BDE8-449EC002258E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2986B2B5-97E6-4F23-9D0C-1287BA2B1C52} = {18D41E41-FDBC-49FB-B011-00B59AB257BB}
+		{AA02A2E3-7FF3-42EA-B621-6407BE957ED0} = {BA1C690A-3C72-4BFE-896B-962EF55AAFDD}
+		{CF90AFD4-1B5A-4288-8F50-9999955FC616} = {BA1C690A-3C72-4BFE-896B-962EF55AAFDD}
+		{7C363315-6468-4DAF-AF59-8F181EB73F6D} = {A253D95F-FCF9-4CB2-BCFD-065CE48701BA}
+		{11F694F7-5F05-4F3D-BDE8-449EC002258E} = {A253D95F-FCF9-4CB2-BCFD-065CE48701BA}
+		{196003A2-EA0E-4276-A91A-8C334F589EE0} = {A253D95F-FCF9-4CB2-BCFD-065CE48701BA}
+		{50852044-96AA-4664-936F-D87C8EDC37AC} = {18D41E41-FDBC-49FB-B011-00B59AB257BB}
+		{4622C51F-4180-4F62-A4FA-94F1797DA33E} = {BA1C690A-3C72-4BFE-896B-962EF55AAFDD}
+	EndGlobalSection
+EndGlobal

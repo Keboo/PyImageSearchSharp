@@ -20,6 +20,7 @@ namespace DocumentScanner_OpenCVSharp
             if (!Parser.Default.ParseArguments(args, options))
             {
                 Console.WriteLine(HelpText.AutoBuild(options));
+                Console.ReadLine();
                 return;
             }
 

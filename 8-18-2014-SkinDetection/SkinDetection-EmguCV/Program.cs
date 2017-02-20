@@ -18,6 +18,7 @@ namespace SkinDetection_EmguCV
             if (!Parser.Default.ParseArguments(args, options))
             {
                 Console.WriteLine(HelpText.AutoBuild(options));
+                Console.ReadLine();
                 return;
             }
             //In order to playback video opencv_ffmpeg*.dll must be found.
