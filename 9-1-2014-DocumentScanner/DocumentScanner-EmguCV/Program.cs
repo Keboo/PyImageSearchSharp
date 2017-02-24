@@ -1,5 +1,4 @@
 ﻿using CommandLine;
-using CommandLine.Text;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
@@ -18,16 +17,8 @@ namespace DocumentScanner_EmguCV
     /// </summary>
     class Program
     {
-        static void Main(string[] args)
+        public static void Run(Options options)
         {
-            var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options))
-            {
-                Console.WriteLine(HelpText.AutoBuild(options));
-                Console.ReadLine();
-                return;
-            }
-
             //load the image and compute the ratio of the old height
             //to the new height, clone it, and resize it
             using (var disposer = new Disposer())
@@ -234,7 +225,7 @@ namespace DocumentScanner_EmguCV
 
     public class Options
     {
-        [Option('i', "image", Required = true, HelpText = "Path to the image to be scanned")]
+        [Option('i', "image", HelpText = "Path to the image to be scanned", DefaultValue = "<Embeded|receipt.jpg>")]
         public string Image { get; set; }
     }
 }

@@ -1,23 +1,15 @@
 ﻿using CommandLine;
 using OpenCvSharp;
+using PyImageSearchSharp;
 using System;
 using System.IO;
-using CommandLine.Text;
-using PyImageSearchSharp;
 
 namespace SkinDetection_OpenCVSharp
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Run(Options options)
         {
-            var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options))
-            {
-                Console.WriteLine(HelpText.AutoBuild(options));
-                Console.ReadLine();
-                return;
-            }
             //In order to playback video opencv_ffmpeg*.dll must be found.
             string includePath = Environment.Is64BitProcess ? @".\dll\x64" : @".\dll\x86";
             foreach (string file in Directory.EnumerateFiles(includePath, "*.dll"))
@@ -110,7 +102,7 @@ namespace SkinDetection_OpenCVSharp
 
     public class Options
     {
-        [Option('v', "video", Required = false, HelpText = "path to the (optional) video file")]
+        [Option('v', "video", HelpText = "path to the (optional) video file", DefaultValue = "<Embeded|skin_example.mov>")]
         public string Video { get; set; }
     }
 }

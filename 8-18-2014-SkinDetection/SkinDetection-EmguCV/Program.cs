@@ -1,26 +1,18 @@
 ﻿using CommandLine;
-using CommandLine.Text;
 using Emgu.CV;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
+using PyImageSearchSharp;
 using System;
 using System.Drawing;
 using System.IO;
-using PyImageSearchSharp;
 
 namespace SkinDetection_EmguCV
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Run(Options options)
         {
-            var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options))
-            {
-                Console.WriteLine(HelpText.AutoBuild(options));
-                Console.ReadLine();
-                return;
-            }
             //In order to playback video opencv_ffmpeg*.dll must be found.
             string includePath = Environment.Is64BitProcess ? @".\x64" : @".\x86";
             foreach (string file in Directory.EnumerateFiles(includePath, "*.dll"))
@@ -103,7 +95,7 @@ namespace SkinDetection_EmguCV
 
     public class Options
     {
-        [Option('v', "video", Required = false, HelpText = "path to the (optional) video file")]
+        [Option('v', "video", HelpText = "path to the (optional) video file", DefaultValue = "<Embeded|skin_example.mov>")]
         public string Video { get; set; }
     }
 }

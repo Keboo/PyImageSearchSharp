@@ -1,23 +1,14 @@
-﻿using OpenCvSharp;
-using System;
-using CommandLine;
-using CommandLine.Text;
+﻿using CommandLine;
+using OpenCvSharp;
 using PyImageSearchSharp;
+using System;
 
 namespace ColorTransfer_OpenCVSharp
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Run(Options options)
         {
-            var options = new Options();
-            if (!Parser.Default.ParseArguments(args, options))
-            {
-                Console.WriteLine(HelpText.AutoBuild(options));
-                Console.ReadLine();
-                return;
-            }
-
             //load the images
             using (Mat source = new Mat(options.Source))
             using (Mat target = new Mat(options.Target))
@@ -138,13 +129,13 @@ namespace ColorTransfer_OpenCVSharp
 
     public class Options
     {
-        [Option('s', "source", Required = true, HelpText = "Path to the source image")]
+        [Option('s', "source", HelpText = "Path to the source image", DefaultValue = "<Embeded|ocean_sunset.jpg>")]
         public string Source { get; set; }
 
-        [Option('t', "target", Required = true, HelpText = "Path to the target image")]
+        [Option('t', "target", HelpText = "Path to the target image", DefaultValue = "<Embeded|ocean_day.jpg>")]
         public string Target { get; set; }
 
-        [Option('o', "output", Required = false, HelpText = "Path to the output image (optional)")]
+        [Option('o', "output", HelpText = "Path to the output image (optional)")]
         public string Output { get; set; }
     }
 }
